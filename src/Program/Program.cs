@@ -9,20 +9,30 @@ namespace CompAndDel
         static void Main(string[] args)
         {
             PictureProvider provider = new PictureProvider();
-            IPicture picture = provider.GetPicture(@"Luke.jpg");
+            IPicture picture = provider.GetPicture(@"beer.jpg");
 
-            IPipe pipenull = new PipeNull();
-            IFilter filternegative = new FilterNegative();
-            IPipe pipeserial2 = new PipeSerial(filternegative, pipenull);
-            IFilter filtergreyscale = new FilterGreyscale();
-            IPipe pipeserial1 = new PipeSerial(filtergreyscale, pipeserial2);
+            IPipe pipeNull = new PipeNull();
+            IFilter filterTwitter = new FilterTwitter();
+            IPipe pipeTwitter = new PipeSerial(filterTwitter, pipeNull);
+
+            IFilter filterNegative = new FilterNegative();
+            IPipe pipeSerial2 = new PipeSerial(filterNegative, pipeTwitter);
+
+            IFilter filterSave = new FilterSave();
+            IPipe pipeProceso = new PipeSerial(filterSave, pipeSerial2);
+
+            IFilter filterGreyscale = new FilterGreyscale();
+            IPipe pipeSerial1 = new PipeSerial(filterGreyscale, pipeProceso);
             
-            IPicture pictureFinal = pipeserial1.Send(picture);
-            IPicture pictureGrey = filtergreyscale.Filter(picture);
+            IPicture pictureFinal = pipeSerial1.Send(picture);
+
+            provider.SavePicture(pictureFinal, @"BeerFinal.jpg");
+
+           /*  IPicture pictureGrey = filtergreyscale.Filter(picture);
             IPicture pictureNegative = filternegative.Filter(pictureGrey);
             provider.SavePicture(pictureFinal, @"LukeFinal.jpg");
             provider.SavePicture(pictureGrey, @"LukeGreyScale.jpg");
-            provider.SavePicture(pictureNegative, @"LukeNegative.jpg");
+            provider.SavePicture(pictureNegative, @"LukeNegative.jpg"); */
 
             
 
