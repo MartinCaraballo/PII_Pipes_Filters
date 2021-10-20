@@ -1,4 +1,0 @@
-namespace CompAndDel.Filters
-{
-    
-}

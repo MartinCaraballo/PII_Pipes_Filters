@@ -11,6 +11,7 @@ namespace CompAndDel.Pipes
     {
         IPipe next2Pipe;
         IPipe nextPipe;
+        IFilter Filtro;
         
         /// <summary>
         /// La cañería recibe una imagen, la clona y envìa la original por una cañeria y la clonada por otra.
@@ -18,8 +19,9 @@ namespace CompAndDel.Pipes
         /// <param name="tipoFiltro">Tipo de filtro que se debe aplicar sobre la imagen. Se crea un nuevo filtro con los parametros por defecto</param>
         /// <param name="nextPipe">Siguiente cañeria con filtro</param>
         /// <param name="next2Pipe">Siguiente cañeria sin filtro</param>
-        public PipeFork(IPipe nextPipe, IPipe next2Pipe) 
+        public PipeFork(IFilter Filtro, IPipe nextPipe, IPipe next2Pipe) 
         {
+            this.Filtro = Filtro;
             this.next2Pipe = next2Pipe;
             this.nextPipe = nextPipe;           
         }
@@ -32,6 +34,7 @@ namespace CompAndDel.Pipes
         public IPicture Send(IPicture picture)
         {
             next2Pipe.Send(picture.Clone());
+            picture = this.Filtro.Filter(picture);
             return this.nextPipe.Send(picture);
         }
     }
