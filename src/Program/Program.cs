@@ -49,8 +49,14 @@ namespace CompAndDel
             IPicture result = pipeSerialinicial.Send(picture2);
             //provider.SavePicture(result, @"RESULTADOCONDICIONAL.jpg");
 
+            IFilter filterIdentity = new FilterBlurIdentity();
+            IPicture picture3 = provider.GetPicture(@"luke.jpg");
+            IPicture resultado1 = filterIdentity.Filter(picture3);
+            provider.SavePicture(resultado1, @"RESULTADO.jpg");
 
-            
+            /* IFilter filterBlur = new FilterBlurConvolution();
+            IPicture resultado2 = filterBlur.Filter(picture3);
+            provider.SavePicture(resultado2, @"BLUR.jpg"); */
 
         }
     }
